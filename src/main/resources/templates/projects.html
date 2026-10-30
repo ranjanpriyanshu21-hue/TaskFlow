@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Projects')}"></head>
+<body>
+<header th:replace="~{fragments :: topbar}"></header>
+<main class="page">
+  <section class="projects">
+    <h1>Your projects</h1>
+    <p class="notice err" th:if="${error}" th:text="${error}"></p>
+    <p class="empty" th:if="${#lists.isEmpty(projects)}">No projects yet. Create your first project to start a board.</p>
+    <ul class="project-list">
+      <li th:each="p : ${projects}">
+        <a class="project-row" th:href="@{/projects/{id}(id=${p.id})}">
+          <span class="project-name" th:text="${p.name}">Project</span>
+          <span class="project-desc" th:text="${p.description}"></span>
+          <span class="project-meta">
+            <span th:text="${p.memberCount} + (${p.memberCount} == 1 ? ' member' : ' members')">1 member</span>
+            <span th:text="${p.doneCount} + ' of ' + ${p.taskCount} + ' tasks done'">0 of 0 tasks done</span>
+          </span>
+          <span class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" th:attr="aria-valuenow=${p.percentDone}">
+            <i th:style="'width:' + ${p.percentDone} + '%'"></i>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+  <aside class="new-project">
+    <h2>New project</h2>
+    <form th:action="@{/projects}" method="post">
+      <label>Name <input name="name" maxlength="120" required></label>
+      <label>What is it for? <textarea name="description" rows="3" maxlength="1000"></textarea></label>
+      <button class="btn primary" type="submit">Create project</button>
+    </form>
+  </aside>
+</main>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

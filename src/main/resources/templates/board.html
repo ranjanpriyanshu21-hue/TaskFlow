@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${board.name})}"></head>
+<body th:data-project-id="${board.id}" th:data-me="${me}">
+<header th:replace="~{fragments :: topbar}"></header>
+
+<section class="board-head">
+  <div class="board-title">
+    <h1 th:text="${board.name}">Project</h1>
+    <p th:if="${board.description}" th:text="${board.description}"></p>
+  </div>
+  <div class="board-tools">
+    <div class="progress">
+      <span id="progressText">0 of 0 done</span>
+      <span class="bar"><i id="progressBar" style="width:0"></i></span>
+    </div>
+    <label class="check"><input type="checkbox" id="mineOnly"> Only my tasks</label>
+    <details class="people">
+      <summary><span id="memberCount" th:text="${#lists.size(board.members)} + ' people'">People</span></summary>
+      <div class="people-pop">
+        <ul>
+          <li th:each="m : ${board.members}"><span class="avatar" th:text="${#strings.substring(m.fullName,0,1)}">A</span>
+            <span th:text="${m.fullName}">Name</span> <small th:text="'@' + ${m.username}"></small></li>
+        </ul>
+        <form th:if="${board.owner}" th:action="@{/projects/{id}/members(id=${board.id})}" method="post" class="add-member">
+          <label>Add by username <input name="username" required></label>
+          <button class="btn" type="submit">Add person</button>
+        </form>
+      </div>
+    </details>
+    <button class="btn primary" id="newTaskBtn" type="button">New task</button>
+  </div>
+</section>
+<p class="notice ok board-note" th:if="${message}" th:text="${message}"></p>
+<p class="notice err board-note" th:if="${error}" th:text="${error}"></p>
+
+<main class="board" id="board" aria-label="Kanban board"></main>
+
+<dialog id="taskDialog" aria-labelledby="dlgTitle">
+  <div class="dlg-grid">
+    <form id="taskForm" class="dlg-main">
+      <h2 id="dlgTitle">New task</h2>
+      <label>Title <input name="title" maxlength="200" required></label>
+      <label>Description <textarea name="description" rows="4" maxlength="2000"></textarea></label>
+      <div class="row">
+        <label>Status
+          <select name="status">
+            <option value="TODO">To do</option><option value="IN_PROGRESS">In progress</option>
+            <option value="REVIEW">In review</option><option value="DONE">Done</option>
+          </select></label>
+        <label>Priority
+          <select name="priority">
+            <option value="LOW">Low</option><option value="MEDIUM" selected>Medium</option>
+            <option value="HIGH">High</option><option value="URGENT">Urgent</option>
+          </select></label>
+      </div>
+      <div class="row">
+        <label>Due <input name="dueDate" type="datetime-local"></label>
+        <label>Assigned to <select name="assigneeId"><option value="">Nobody yet</option></select></label>
+      </div>
+      <p class="notice err" id="formError" hidden></p>
+      <div class="dlg-actions">
+        <button class="btn danger" type="button" id="deleteBtn" hidden>Delete task</button>
+        <span class="spacer"></span>
+        <button class="btn" type="button" id="cancelBtn">Close</button>
+        <button class="btn primary" type="submit" id="saveBtn">Create task</button>
+      </div>
+    </form>
+
+    <aside class="dlg-side" id="dlgSide" hidden>
+      <h3>Files</h3>
+      <ul class="files" id="fileList"></ul>
+      <label class="upload">Attach a file <input type="file" id="fileInput"></label>
+      <h3>Discussion</h3>
+      <ul class="comments" id="commentList"></ul>
+      <form id="commentForm" class="comment-form">
+        <label class="sr">Write a comment <textarea name="text" rows="2" maxlength="2000" placeholder="Write a comment" required></textarea></label>
+        <button class="btn" type="submit">Post comment</button>
+      </form>
+    </aside>
+  </div>
+</dialog>
+
+<div th:replace="~{fragments :: scripts}"></div>
+<script th:src="@{/js/board.js}"></script>
+</body>
+</html>

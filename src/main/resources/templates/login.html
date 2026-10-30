@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Sign in')}"></head>
+<body class="auth">
+<main class="auth-grid">
+  <section class="auth-hero" aria-hidden="true">
+    <h1>Every task, from first idea to done.</h1>
+    <div class="mini-board">
+      <div class="mini-col"><b>To do</b><span class="mini-card p-high">Write launch checklist</span><span class="mini-card">Book user interviews</span></div>
+      <div class="mini-col"><b>In progress</b><span class="mini-card p-urgent">Fix payment webhook</span></div>
+      <div class="mini-col"><b>Done</b><span class="mini-card p-low">Set up repository</span><span class="mini-card">Pick a project name</span></div>
+    </div>
+  </section>
+  <section class="auth-form">
+    <h2>Sign in</h2>
+    <p class="notice ok" th:if="${param.registered}">Account created. Sign in to continue.</p>
+    <p class="notice ok" th:if="${param.logout}">You have signed out.</p>
+    <p class="notice err" th:if="${param.error}">Wrong username or password.</p>
+    <form th:action="@{/login}" method="post">
+      <label>Username <input name="username" autocomplete="username" required autofocus></label>
+      <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">Sign in</button>
+    </form>
+    <p class="alt">New here? <a th:href="@{/register}">Create an account</a></p>
+  </section>
+</main>
+</body>
+</html>

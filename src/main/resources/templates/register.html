@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Create account')}"></head>
+<body class="auth">
+<main class="auth-grid">
+  <section class="auth-hero" aria-hidden="true">
+    <h1>Set up your workspace in a minute.</h1>
+    <p>Create projects, invite teammates by username and watch the board update as they work.</p>
+  </section>
+  <section class="auth-form">
+    <h2>Create account</h2>
+    <p class="notice err" th:if="${error}" th:text="${error}"></p>
+    <form th:action="@{/register}" method="post">
+      <label>Full name <input name="fullName" autocomplete="name" th:value="${fullName}" required autofocus></label>
+      <label>Username <input name="username" autocomplete="username" th:value="${username}" required></label>
+      <label>Password <input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+      <button class="btn primary" type="submit">Create account</button>
+    </form>
+    <p class="alt">Already registered? <a th:href="@{/login}">Sign in</a></p>
+  </section>
+</main>
+</body>
+</html>
